@@ -1,6 +1,6 @@
-# bytebank_persistence
+# wallet_watch
 
-A new Bytebank Flutter project.
+A new WalletWatch Flutter project.
 
 ## Getting Started
 
