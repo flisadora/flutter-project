@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'screens/dashboard.dart';
+import 'screens/fingerprint_page.dart';
 
 void main() {
   runApp(const WalletWatchApp());
@@ -24,7 +25,8 @@ class WalletWatchApp extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: Dashboard(),
+      home: FingerprintPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
