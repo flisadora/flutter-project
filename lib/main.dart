@@ -26,6 +26,7 @@ class WalletWatchApp extends StatelessWidget {
         ),
       ),
       home: FingerprintPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

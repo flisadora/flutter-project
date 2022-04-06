@@ -8,7 +8,7 @@ class FingerprintPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text("pls work"),
+          title: Text("Wallet Watch"),
           centerTitle: true,
         ),
         body: Padding(
@@ -17,15 +17,15 @@ class FingerprintPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                buildAvailability(context),
-                SizedBox(height: 24),
+                //buildAvailability(context),
+                //SizedBox(height: 24),
                 buildAuthenticate(context),
               ],
             ),
           ),
         ),
       );
-
+/*
   Widget buildAvailability(BuildContext context) => buildButton(
         text: 'Check Availability',
         icon: Icons.event_available,
@@ -65,8 +65,9 @@ class FingerprintPage extends StatelessWidget {
         ),
       );
 
+  */
   Widget buildAuthenticate(BuildContext context) => buildButton(
-        text: 'Authenticate',
+        text: 'Login',
         icon: Icons.lock_open,
         onClicked: () async {
           final isAuthenticated = await LocalAuthApi.authenticate();
@@ -86,7 +87,10 @@ class FingerprintPage extends StatelessWidget {
   }) =>
       ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          minimumSize: Size.fromHeight(50),
+          minimumSize: Size.fromHeight(40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
         ),
         icon: Icon(icon, size: 26),
         label: Text(
