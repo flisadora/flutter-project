@@ -1,3 +1,4 @@
+import 'package:bytebank_persistence/screens/atm_locator.dart';
 import 'package:bytebank_persistence/screens/contacts_list.dart';
 import 'package:bytebank_persistence/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
@@ -92,10 +93,10 @@ class Dashboard extends StatelessWidget {
                   },
                 ),
                 _FeatureItem(
-                  'Transaction Feed',
+                  'ATM Locator',
                   Icons.star,
                   onClick: () {
-                    debugPrint('shine on');
+                    _ShowAtmLocator(context);
                   },
                 ),
                 _FeatureItem(
@@ -125,6 +126,14 @@ class Dashboard extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
           builder: (context) => TransactionsList()
+      ),
+    );
+  }
+
+  void _ShowAtmLocator(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => AtmLocator()
       ),
     );
   }
