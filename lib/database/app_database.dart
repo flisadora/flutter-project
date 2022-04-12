@@ -1,12 +1,12 @@
-import 'package:bytebank_persistence/database/dao/contact_dao.dart';
+import 'package:bytebank_persistence/database/dao/expense_dao.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<Database> getDatabase() async {
-  final String path = join(await getDatabasesPath(), 'bytebank.db');
+  final String path = join(await getDatabasesPath(), 'wallet_watch.db');
   return openDatabase(path,
     onCreate: (db, version) {
-      db.execute(ContactDao.tableSql);
+      db.execute(ExpenseDao.tableSql);
     },
     version: 1,
     //    onDowngrade: onDatabaseDowngradeDelete,
