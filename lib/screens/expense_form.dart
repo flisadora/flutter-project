@@ -1,6 +1,6 @@
 import 'package:bytebank_persistence/database/dao/expense_dao.dart';
 import 'package:bytebank_persistence/models/expense.dart';
-import 'package:bytebank_persistence/sensors/qrcode_reader.dart';
+import 'package:bytebank_persistence/sensors/qrcode_scan.dart';
 import 'package:flutter/material.dart';
 
 const _titleAppBar = 'New expense';
@@ -70,10 +70,12 @@ class _ExpenseFormState extends State<ExpenseForm> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          QrCodeReader('qr code reader');
+          debugPrint('qr code scan call');
+          QrCodeScan();
         },
         child: Icon(
-          Icons.qr_code_2_sharp,
+          //Icons.qr_code_2_sharp,
+          Icons.more_vert,
           size: 32,
         ),
       ),
