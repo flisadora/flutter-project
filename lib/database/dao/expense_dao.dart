@@ -6,13 +6,16 @@ class ExpenseDao {
   static const String tableSql = 'CREATE TABLE $_tableName('
       '$_id INTEGER PRIMARY KEY, '
       '$_type TEXT, '
-      '$_value DOUBLE)';
+      '$_value DOUBLE, '
+      '$_label TEXT, '
+      '$_date TEXT)';
 
   static const String _tableName = 'expenses';
   static const String _id = 'id';
   static const String _type = 'type';
   static const String _value = 'value';
-
+  static const String _label = 'label';
+  static const String _date = 'date';
 
   Future<int> save(Expense expense) async{
     final Database db = await getDatabase();
@@ -24,6 +27,8 @@ class ExpenseDao {
     final Map<String, dynamic> expenseMap = Map();
     expenseMap[_type] = expense.type;
     expenseMap[_value] = expense.value;
+    expenseMap[_label] = expense.label;
+    expenseMap[_date] = expense.date;
     return expenseMap;
   }
 
@@ -41,6 +46,8 @@ class ExpenseDao {
         row[_id],
         row[_type],
         row[_value],
+        row[_label],
+        row[_date],
       );
       expenses.add(expense);
     }

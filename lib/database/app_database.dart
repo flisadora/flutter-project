@@ -9,6 +9,6 @@ Future<Database> getDatabase() async {
       db.execute(ExpenseDao.tableSql);
     },
     version: 1,
-    //    onDowngrade: onDatabaseDowngradeDelete,
+    onDowngrade: onDatabaseDowngradeDelete,
   );
 }

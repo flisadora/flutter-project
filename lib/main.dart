@@ -1,4 +1,5 @@
 import 'package:bytebank_persistence/database/app_database.dart';
+import 'package:bytebank_persistence/database/dao/expense_dao.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/dashboard.dart';
@@ -6,7 +7,6 @@ import 'screens/fingerprint_page.dart';
 
 void main() {
   runApp(const WalletWatchApp());
-  getDatabase();
 }
 
 class WalletWatchApp extends StatelessWidget {

@@ -45,7 +45,7 @@ class _ExpensesListState extends State<ExpensesList> {
                         child: ListTile(
                           leading: Icon(Icons.monetization_on),
                           title: Text(
-                            expense.type,
+                            expense.label,
                             style: TextStyle(
                               fontSize: 24.0,
                               fontWeight: FontWeight.bold,
@@ -94,7 +94,7 @@ class _ExpenseItem extends StatelessWidget{
     return Card(
       child: ListTile(
         onTap: () => onClick(),
-        title: Text(expense.type),
+        title: Text(expense.type + ' ' + expense.label),
         subtitle: Text(expense.value.toString()),
       ),
     );

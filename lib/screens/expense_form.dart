@@ -1,7 +1,10 @@
 import 'package:bytebank_persistence/database/dao/expense_dao.dart';
 import 'package:bytebank_persistence/models/expense.dart';
+import 'package:bytebank_persistence/models/expense_type.dart';
 import 'package:bytebank_persistence/sensors/qrcode_scan.dart';
 import 'package:flutter/material.dart';
+import  'package:intl/intl.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 const _titleAppBar = 'New expense';
 const _textButtonCreate = 'Create';
@@ -14,10 +17,13 @@ class ExpenseForm extends StatefulWidget {
 }
 
 class _ExpenseFormState extends State<ExpenseForm> {
-  final TextEditingController _typeController = TextEditingController();
   final TextEditingController _valueController =
   TextEditingController();
+  final TextEditingController _labelController =
+  TextEditingController();
   final ExpenseDao _dao = ExpenseDao();
+  String? selectedValue;
+  final List<String> items = expenseTypeList(ExpenseTypeMap);
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +33,40 @@ class _ExpenseFormState extends State<ExpenseForm> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
+            DropdownButtonHideUnderline(
+              child: DropdownButton2(
+                hint: Text(
+                  'Select Type',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Theme.of(context).hintColor,
+                  ),
+                ),
+                items: items.map((item) =>
+                  DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  )).toList(),
+                value: selectedValue,
+                onChanged: (value) {
+                  setState(() {
+                    selectedValue = value as String;
+                  });
+                },
+                buttonHeight: 50,
+                buttonWidth: 400,
+                itemHeight: 40,
+              ),
+            ),
             TextField(
-              controller: _typeController,
+              controller: _labelController,
               decoration: InputDecoration(
-                labelText: 'Type',
+                labelText: 'Label',
               ),
               style: TextStyle(
                 fontSize: 20.0,
@@ -56,10 +92,18 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 child: ElevatedButton(
                   child: Text(_textButtonCreate),
                   onPressed: () {
-                    final String type = _typeController.text;
+                    final String? type = selectedValue;
                     final double? value =
                     double.tryParse(_valueController.text);
-                    final Expense newExpense = Expense(0, type, value!);
+                    final String label = _labelController.text;
+                    final Expense newExpense = Expense(
+                      0,
+                      type!,
+                      value!,
+                      label,
+                      DateFormat("yyyy-MM-dd").format(DateTime.now()).toString()
+                    );
+                    print(newExpense.toString());
                     _dao.save(newExpense).then((id) => Navigator.pop(context));
                   },
                 ),
