@@ -41,24 +41,13 @@ class _ExpensesListState extends State<ExpensesList> {
                   return ListView.builder(
                     itemBuilder: (context, index) {
                       final Expense expense = expenses[index];
-                      return Card(
-                        child: ListTile(
-                          leading: Icon(Icons.monetization_on),
-                          title: Text(
-                            expense.label,
-                            style: TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                            expense.value.toString(),
-                            style: TextStyle(
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ),
-                      );
+                      return _ExpenseItem(expense, onClick: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => ExpenseForm(expense)
+                            )
+                        );
+                      },);
                     },
                     itemCount: expenses.length,
                   );
@@ -94,8 +83,26 @@ class _ExpenseItem extends StatelessWidget{
     return Card(
       child: ListTile(
         onTap: () => onClick(),
-        title: Text(expense.type + ' ' + expense.label),
-        subtitle: Text(expense.value.toString()),
+        leading: Icon(Icons.monetization_on),
+        title: Text(
+          expense.label,
+          style: TextStyle(
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(
+          expense.value.toString(),
+          style: TextStyle(
+            fontSize: 16.0,
+          ),
+        ),
+        trailing: TextButton(
+          onPressed: () {
+
+          },
+          child: Icon(Icons.delete),
+        ),
       ),
     );
   }
