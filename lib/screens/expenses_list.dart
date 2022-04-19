@@ -6,16 +6,16 @@ import 'package:bytebank_persistence/screens/expense_form.dart';
 import 'package:flutter/material.dart';
 
 const _titleAppBar = 'Expenses';
+final ExpenseDao _dao = ExpenseDao();
 
 class ExpensesList extends StatefulWidget {
   const ExpensesList({Key? key}) : super(key: key);
 
   @override
-  State<ExpensesList> createState() => _ExpensesListState();
+  State<ExpensesList> createState() => ExpensesListState();
 }
 
-class _ExpensesListState extends State<ExpensesList> {
-  final ExpenseDao _dao = ExpenseDao();
+class ExpensesListState extends State<ExpensesList> {
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +59,12 @@ class _ExpensesListState extends State<ExpensesList> {
         }
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => ExpenseForm(),
             ),
-          ).then((value) => setState(() {} ));
+          ).then((_) => setState(() {} ));
         },
         child: Icon(Icons.add),
       ),
@@ -99,7 +99,9 @@ class _ExpenseItem extends StatelessWidget{
         ),
         trailing: TextButton(
           onPressed: () {
-
+            ExpensesListState().setState((){
+              _dao.delete(expense);
+            });
           },
           child: Icon(Icons.delete),
         ),

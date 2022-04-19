@@ -20,15 +20,16 @@ class ExpenseDao {
   Future<int> save(Expense expense) async{
     final Database db = await getDatabase();
     Map<String, dynamic> expenseMap = _toMap(expense);
+    print(expenseMap.toString());
     return db.insert(_tableName, expenseMap);
   }
 
-  Map<String, dynamic> _toMap(Expense expense) {
+  Map<String, dynamic> _toMap(Expense? expense) {
     final Map<String, dynamic> expenseMap = Map();
-    expenseMap[_type] = expense.type;
-    expenseMap[_value] = expense.value;
-    expenseMap[_label] = expense.label;
-    expenseMap[_date] = expense.date;
+    expenseMap[_type] = expense?.type;
+    expenseMap[_value] = expense?.value;
+    expenseMap[_label] = expense?.label;
+    expenseMap[_date] = expense?.date;
     return expenseMap;
   }
 
@@ -57,7 +58,7 @@ class ExpenseDao {
   Future<int> update(Expense expense) async {
     final Database db = await getDatabase();
     final Map<String, dynamic> expenseMap = _toMap(expense);
-    return db.update(
+    return await db.update(
       _tableName,
       expenseMap,
       where: 'id = ?',
@@ -65,12 +66,12 @@ class ExpenseDao {
     );
   }
 
-  Future<int> delete(int id) async {
+  Future<int> delete(Expense expense) async {
     final Database db = await getDatabase();
-    return db.delete(
+    return await db.delete(
       _tableName,
       where: 'id = ?',
-      whereArgs: [id],
+      whereArgs: [expense.id],
     );
   }
 }

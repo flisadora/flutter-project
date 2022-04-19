@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 
-const _titleAppBar = 'New expense';
-const _textButtonCreate = 'Create';
-
 class ExpenseForm extends StatefulWidget {
   final Expense? expense;
 
@@ -19,6 +16,8 @@ class ExpenseForm extends StatefulWidget {
 }
 
 class _ExpenseFormState extends State<ExpenseForm> {
+  String _titleAppBar = 'New expense';
+  String _textButtonCreate = 'Create';
   final ExpenseDao _dao = ExpenseDao();
   String? selectedValue;
   final List<String> items = expenseTypeList(ExpenseTypeMap);
@@ -27,10 +26,13 @@ class _ExpenseFormState extends State<ExpenseForm> {
   TextEditingController _labelController =
   TextEditingController();
   DateTime _chosenDateTime = DateTime.now();
+  int _expenseId = 0;
 
   @override
   Widget build(BuildContext context) {
     if(widget.expense != null) {
+      print('expense not null');
+      print(widget.expense.toString());
       _editExpense();
     }
     return Scaffold(
@@ -120,11 +122,16 @@ class _ExpenseFormState extends State<ExpenseForm> {
                       double.tryParse(_valueController.text);
                       final String label = _labelController.text;
                       final Expense newExpense = Expense(
-                        0, type!, value!, label,
+                        _expenseId, type!, value!, label,
                         _chosenDateTime.toString().substring(0, 10)
                       );
-                      print(newExpense.toString());
-                      _dao.save(newExpense).then((id) => Navigator.pop(context));
+                      if(widget.expense != null){
+                        _dao.update(newExpense);
+                      }
+                      else {
+                        _dao.save(newExpense);
+                      }
+                      Navigator.pop(context);
                     },
                   ),
                 ),
@@ -148,9 +155,12 @@ class _ExpenseFormState extends State<ExpenseForm> {
   }
 
   void _editExpense() {
+    _titleAppBar = 'Edit Expense';
+    _textButtonCreate = 'Save';
     selectedValue = widget.expense?.type;
     _labelController.text = widget.expense!.label;
     _valueController.text = widget.expense!.value.toString();
     _chosenDateTime = DateTime.tryParse(widget.expense!.date)!;
+    _expenseId = widget.expense!.id;
   }
 }
