@@ -1,7 +1,14 @@
+import 'package:bytebank_persistence/models/place.dart';
 import 'package:bytebank_persistence/screens/atm_locator.dart';
 import 'package:bytebank_persistence/screens/contacts_list.dart';
+import 'package:bytebank_persistence/screens/search.dart';
 import 'package:bytebank_persistence/screens/transactions_list.dart';
+import 'package:bytebank_persistence/services/geolocator_service.dart';
+import 'package:bytebank_persistence/services/places_service.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 const _titleAppBar = 'Dashboard';
 
@@ -100,10 +107,10 @@ class Dashboard extends StatelessWidget {
                   },
                 ),
                 _FeatureItem(
-                  'Count 4',
-                  Icons.print,
+                  'ATM Locator new version',
+                  Icons.search,
                   onClick: () {
-                    debugPrint('printed');
+                    _ShowSearch(context);
                   },
                 ),
               ],
@@ -137,6 +144,38 @@ class Dashboard extends StatelessWidget {
       ),
     );
   }
+
+  void _ShowSearch(BuildContext context) {
+    final locatorService = GeoLocatorService();
+    final placesService = PlacesService();
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => MultiProvider(
+          providers: [
+            FutureProvider<Position?>(
+              initialData: null,
+              create: (context) => locatorService.getLocation(),
+            ),
+            FutureProvider(create: (context) {
+              ImageConfiguration configuration = createLocalImageConfiguration(context);
+              return BitmapDescriptor.fromAssetImage(configuration, 'images/atm-marker.png');
+            }, initialData: null,),
+            ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
+              update: (context, position, icon, places){
+                return
+                  (position != null) ?
+                  placesService.getPlaces(position.latitude, position.longitude, icon)
+                      : null;
+              },
+            )
+          ],
+          child: Search()
+        ),
+      ),
+    );
+  }
+
 }
 
 class _FeatureItem extends StatelessWidget {
