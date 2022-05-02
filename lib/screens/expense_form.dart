@@ -19,7 +19,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   String _titleAppBar = 'New expense';
   String _textButtonCreate = 'Create';
   final ExpenseDao _dao = ExpenseDao();
-  String? selectedValue;
+  String? _selectedValue;
   final List<String> items = expenseTypeList(ExpenseTypeMap);
   TextEditingController _valueController =
   TextEditingController();
@@ -37,6 +37,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
     }
     return Scaffold(
       appBar: AppBar(title: Text(_titleAppBar)),
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -61,10 +62,10 @@ class _ExpenseFormState extends State<ExpenseForm> {
                         ),
                       ),
                     )).toList(),
-                  value: selectedValue,
+                  value: _selectedValue,
                   onChanged: (value) {
                     setState(() {
-                      selectedValue = value as String;
+                      _selectedValue = value as String;
                     });
                   },
                   buttonHeight: 50,
@@ -103,9 +104,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                     initialDateTime: _chosenDateTime,
                     maximumDate: DateTime.now(),
                     onDateTimeChanged: (DateTime newDateTime) {
-                      setState(() {
-                        _chosenDateTime = newDateTime;
-                      });
+                      _chosenDateTime = newDateTime;
                     },
                   ),
                 ),
@@ -117,7 +116,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                   child: ElevatedButton(
                     child: Text(_textButtonCreate),
                     onPressed: () {
-                      final String? type = selectedValue;
+                      final String? type = _selectedValue;
                       final double? value =
                       double.tryParse(_valueController.text);
                       final String label = _labelController.text;
@@ -126,12 +125,11 @@ class _ExpenseFormState extends State<ExpenseForm> {
                         _chosenDateTime.toString().substring(0, 10)
                       );
                       if(widget.expense != null){
-                        _dao.update(newExpense);
+                        _dao.update(newExpense).then((id) => Navigator.pop(context));
                       }
                       else {
-                        _dao.save(newExpense);
-                      }
-                      Navigator.pop(context);
+                        _dao.save(newExpense).then((id) => Navigator.pop(context));
+                      };
                     },
                   ),
                 ),
@@ -157,7 +155,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
   void _editExpense() {
     _titleAppBar = 'Edit Expense';
     _textButtonCreate = 'Save';
-    selectedValue = widget.expense?.type;
+    _selectedValue = widget.expense!.type;
     _labelController.text = widget.expense!.label;
     _valueController.text = widget.expense!.value.toString();
     _chosenDateTime = DateTime.tryParse(widget.expense!.date)!;

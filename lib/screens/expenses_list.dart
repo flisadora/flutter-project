@@ -91,19 +91,28 @@ class _ExpenseItem extends StatelessWidget{
             fontWeight: FontWeight.bold,
           ),
         ),
-        subtitle: Text(
-          expense.value.toString(),
-          style: TextStyle(
-            fontSize: 16.0,
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 6.0),
+          child: Text(
+            expense.value.toString(),
+            style: TextStyle(
+              fontSize: 18.0,
+            ),
           ),
         ),
         trailing: TextButton(
           onPressed: () {
-            ExpensesListState().setState((){
-              _dao.delete(expense);
-            });
+            _dao.delete(expense);
+            FutureBuilder<List<Expense>>(
+                initialData: [],
+                future: _dao.findAll(),
+                builder: (context, snapshot) {
+                  print('sera???');
+                  return ExpensesList();
+                }
+            );
           },
-          child: Icon(Icons.delete),
+          child: Icon(Icons.delete)
         ),
       ),
     );
