@@ -38,6 +38,7 @@ class ExpensesListState extends State<ExpensesList> {
               if(snapshot.hasData) {
                 final List<Expense> expenses = snapshot.data as List<Expense>;
                 if (expenses.isNotEmpty) {
+                  expenses.sort((a, b) => b.date.compareTo(a.date));
                   return ListView.builder(
                     itemBuilder: (context, index) {
                       final Expense expense = expenses[index];
