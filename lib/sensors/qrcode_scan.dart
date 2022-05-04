@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
+const _titleAppBar = 'QR Code Scan';
 
 class QrCodeScan extends StatefulWidget {
   const QrCodeScan({Key? key}) : super(key: key);
@@ -24,13 +25,15 @@ class _QrCodeScanState extends State<QrCodeScan> {
     super.reassemble();
     if (Platform.isAndroid) {
       controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      controller!.resumeCamera();
     }
-    controller!.resumeCamera();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text(_titleAppBar)),
       body: Column(
         children: <Widget>[
           Expanded(

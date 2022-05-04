@@ -33,7 +33,7 @@ dependencies:
   path:
   http:
   http_interceptor:
-  qr_code_scanner:
+  qr_code_scanner: ^0.7.0
   dropdown_button2:
   grouped_list: ^4.2.0
 

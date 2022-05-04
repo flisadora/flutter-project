@@ -141,7 +141,11 @@ class _ExpenseFormState extends State<ExpenseForm> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           debugPrint('qr code scan call');
-          QrCodeScan();
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => QrCodeScan(),
+            ),
+          ).then((value) => setState(() {} ));
         },
         child: Icon(
           //Icons.qr_code_2_sharp,
