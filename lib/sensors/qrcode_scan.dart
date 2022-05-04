@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bytebank_persistence/models/expense.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -47,9 +48,9 @@ class _QrCodeScanState extends State<QrCodeScan> {
             flex: 1,
             child: Center(
               child: (result != null)
-                  ? Text(
-                  'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  : Text('Scan a code'),
+                ? Text(
+                'Data: ${result!.code}')
+                : Text('Scan a code'),
             ),
           )
         ],
@@ -70,5 +71,13 @@ class _QrCodeScanState extends State<QrCodeScan> {
   void dispose() {
     controller?.dispose();
     super.dispose();
+  }
+
+  Expense toExpense(String result) {
+    var splitResult = result.substring(1,result.length-1).split(',');
+    final Map<String, String> expenseMap;
+
+    final expense = new Expense(0, 'type', 0, 'label', DateTime.now().toString().substring(0, 10));
+    return expense;
   }
 }
