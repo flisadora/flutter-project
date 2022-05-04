@@ -56,7 +56,7 @@ class ExpensesListState extends State<ExpensesList> {
                   expenses.sort((a, b) => b.date.compareTo(a.date));
                   return GroupedListView<dynamic, String>(
                     elements: expenses,
-                    groupBy: (expense) => expense.date.substring(5,7),
+                    groupBy: (expense) => expense.date.substring(0,7),
                     groupComparator: (value1, value2) => value2.compareTo(value1),
                     itemComparator: (item1, item2) =>
                     item2.date.substring(8).compareTo(item1.date.substring(8)),
