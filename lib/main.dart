@@ -27,7 +27,7 @@ class WalletWatchApp extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: Dashboard(),
+      home: FingerprintPage(),
       debugShowCheckedModeBanner: false,
     );
   }

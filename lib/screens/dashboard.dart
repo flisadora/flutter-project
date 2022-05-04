@@ -79,11 +79,10 @@ class Dashboard extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               children: <Widget>[
                 _FeatureItem(
-                  'Transfer',
-                  Icons.monetization_on,
-                  
+                  'Expenses',
+                  Icons.money,
                   onClick: () {
-                    _ShowContactsList(context);
+                    _ShowExpensesList(context);
                   },
                 ),
                 _FeatureItem(
@@ -100,24 +99,11 @@ class Dashboard extends StatelessWidget {
                     debugPrint('shine on');
                   },
                 ),
-                _FeatureItem(
-                  'Expenses',
-                  Icons.money,
-                  onClick: () {
-                    _ShowExpensesList(context);
-                  },
-                ),
               ],
             ),
           )
         ],
       ),
-    );
-  }
-
-  void _ShowContactsList(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => ContactsList()),
     );
   }
 
