@@ -145,22 +145,41 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  void _ShowSearch(BuildContext context) {
+  void _ShowSearch(BuildContext context) async {
     final locatorService = GeoLocatorService();
     final placesService = PlacesService();
 
+    final locationPermission = await Geolocator.checkPermission();
+
+    if (locationPermission != LocationPermission.always && locationPermission != LocationPermission.whileInUse) {
+      await Geolocator.requestPermission();
+    }
+
+    final location = await locatorService.getLocation();
+
+    final places = await placesService.getPlaces(location.latitude, location.longitude, BitmapDescriptor.defaultMarker,);
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => Search(location, places),
+      ),
+    );
+
+    /*
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => MultiProvider(
           providers: [
+            /*
             FutureProvider<Position?>(
               initialData: null,
               create: (context) => locatorService.getLocation(),
-            ),
+            ),*/
+            /*
             FutureProvider(create: (context) {
               ImageConfiguration configuration = createLocalImageConfiguration(context);
               return BitmapDescriptor.fromAssetImage(configuration, 'images/atm-marker.png');
-            }, initialData: null,),
+            }, initialData: null,),*/
             ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
               update: (context, position, icon, places){
                 return
@@ -170,10 +189,10 @@ class Dashboard extends StatelessWidget {
               },
             )
           ],
-          child: Search()
+          child: Search(location, places,)
         ),
       ),
-    );
+    );*/
   }
 
 }
