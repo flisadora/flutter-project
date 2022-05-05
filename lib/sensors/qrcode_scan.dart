@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:bytebank_persistence/models/expense.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +20,7 @@ class _QrCodeScanState extends State<QrCodeScan> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  late final Expense _expense;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -48,8 +51,29 @@ class _QrCodeScanState extends State<QrCodeScan> {
             flex: 1,
             child: Center(
               child: (result != null)
-                ? Text(
-                'Data: ${result!.code}')
+                ? Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text('Expense found!'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: SizedBox(
+                        //width: double.maxFinite,
+                        child: ElevatedButton(
+                          child: Text('Use expense scanned'),
+                          onPressed: () {
+                            _expense = _toExpense(result!.code.toString());
+                            print('ON PRESSED: $_expense');
+                            Navigator.pop(context, _expense);
+                          },
+                        ),
+                      ),
+                    ),
+                    //Text('Format: ${result!.format}'),
+                  ],
+                )
                 : Text('Scan a code'),
             ),
           )
@@ -73,11 +97,14 @@ class _QrCodeScanState extends State<QrCodeScan> {
     super.dispose();
   }
 
-  Expense toExpense(String result) {
-    var splitResult = result.substring(1,result.length-1).split(',');
-    final Map<String, String> expenseMap;
-
-    final expense = new Expense(0, 'type', 0, 'label', DateTime.now().toString().substring(0, 10));
+  Expense _toExpense(String result) {
+    final Map<String, dynamic> expenseMap = jsonDecode(result);
+    final expense = new Expense(0,
+        expenseMap['type'],
+        double.tryParse(expenseMap['value']),
+        expenseMap['label'],
+        expenseMap['date']
+    );
     return expense;
   }
 }
