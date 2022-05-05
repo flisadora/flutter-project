@@ -83,7 +83,7 @@ class _AtmLocatorState extends State<AtmLocator> {
             compassEnabled: false,
             tiltGesturesEnabled: false,
             markers: _markers,
-            mapType: MapType.normal,
+            mapType: MapType.none,
             initialCameraPosition: initialCameraPosition,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);

@@ -155,10 +155,11 @@ class Dashboard extends StatelessWidget {
       await Geolocator.requestPermission();
     }
 
+    print('cade????? 1');
     final location = await locatorService.getLocation();
-
+    print('cade????? 2');
     final places = await placesService.getPlaces(location.latitude, location.longitude, BitmapDescriptor.defaultMarker,);
-
+    print(places.toList().toString());
     Navigator.of(context).push(
       MaterialPageRoute(
           builder: (context) => Search(location, places),
@@ -170,16 +171,6 @@ class Dashboard extends StatelessWidget {
       MaterialPageRoute(
         builder: (_) => MultiProvider(
           providers: [
-            /*
-            FutureProvider<Position?>(
-              initialData: null,
-              create: (context) => locatorService.getLocation(),
-            ),*/
-            /*
-            FutureProvider(create: (context) {
-              ImageConfiguration configuration = createLocalImageConfiguration(context);
-              return BitmapDescriptor.fromAssetImage(configuration, 'images/atm-marker.png');
-            }, initialData: null,),*/
             ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
               update: (context, position, icon, places){
                 return
