@@ -134,12 +134,15 @@ class _ExpenseItem extends StatelessWidget{
           onPressed: () {
             _dao.delete(expense);
             FutureBuilder<List<Expense>>(
-                initialData: [],
-                future: _dao.findAll(),
-                builder: (context, snapshot) {
-                  print('sera???');
+              initialData: [],
+              future: _dao.findAll(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
                   return ExpensesList();
+                } else {
+                  return Progress();
                 }
+              }
             );
           },
           child: Icon(Icons.delete)
