@@ -2,6 +2,7 @@ import 'package:bytebank_persistence/models/place.dart';
 import 'package:bytebank_persistence/screens/atm_locator.dart';
 import 'package:bytebank_persistence/screens/contacts_list.dart';
 import 'package:bytebank_persistence/screens/search.dart';
+import 'package:bytebank_persistence/screens/expenses_list.dart';
 import 'package:bytebank_persistence/screens/transactions_list.dart';
 import 'package:bytebank_persistence/services/geolocator_service.dart';
 import 'package:bytebank_persistence/services/places_service.dart';
@@ -10,7 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-const _titleAppBar = 'Dashboard';
+const _titleAppBar = 'WalletWatch';
 
 class Dashboard extends StatelessWidget {
   @override
@@ -19,59 +20,6 @@ class Dashboard extends StatelessWidget {
       appBar: AppBar(
         title: Text(_titleAppBar),
       ),
-      /*body: GridView.count(
-        // Create a grid with 2 columns. If you change the scrollDirection to
-        // horizontal, this produces 2 rows.
-        crossAxisCount: 2,
-        // Generate 100 widgets that display their index in the List.
-        children: List.generate(4, (index) {
-          return Center(
-            child: Text(
-              'Item $index',
-              style: Theme.of(context).textTheme.headline5,
-            ),
-          );
-        }),
-      ),*/
-      /*body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('images/ww_logo.png'),
-          ),
-          Container(
-            height: 100,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                _FeatureItem(
-                  'Transfer',
-                  Icons.monetization_on,
-                  onClick: () {
-                    _ShowContactsList(context);
-                  },
-                ),
-                _FeatureItem(
-                  'Transaction Feed',
-                  Icons.description,
-                  onClick: () {
-                    _ShowTransactionsList(context);
-                  },
-                ),
-                _FeatureItem(
-                  'Transaction Feed',
-                  Icons.star,
-                  onClick: () {
-                    debugPrint('shine on');
-                  },
-                ),
-              ],
-            ),
-          )
-        ],
-      ),*/
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,10 +34,10 @@ class Dashboard extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               children: <Widget>[
                 _FeatureItem(
-                  'Transfer',
-                  Icons.monetization_on,
+                  'Expenses',
+                  Icons.money,
                   onClick: () {
-                    _ShowContactsList(context);
+                    _ShowExpensesList(context);
                   },
                 ),
                 _FeatureItem(
@@ -121,19 +69,15 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  void _ShowContactsList(BuildContext context) {
+  void _ShowTransactionsList(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) => ContactsList()
-      ),
+      MaterialPageRoute(builder: (context) => TransactionsList()),
     );
   }
 
-  void _ShowTransactionsList(BuildContext context) {
+  void _ShowExpensesList(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) => TransactionsList()
-      ),
+      MaterialPageRoute(builder: (context) => ExpensesList()),
     );
   }
 

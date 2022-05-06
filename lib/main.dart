@@ -1,7 +1,10 @@
+import 'package:bytebank_persistence/database/app_database.dart';
+import 'package:bytebank_persistence/database/dao/expense_dao.dart';
 import 'package:bytebank_persistence/screens/atm_locator.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/dashboard.dart';
+import 'screens/fingerprint_page.dart';
 
 void main() {
   runApp(const WalletWatchApp());
@@ -26,6 +29,7 @@ class WalletWatchApp extends StatelessWidget {
         ),
       ),
       home: Dashboard(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
