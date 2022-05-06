@@ -1,5 +1,4 @@
 import 'package:bytebank_persistence/api/local_auth_api.dart';
-import 'package:bytebank_persistence/main.dart';
 import 'package:bytebank_persistence/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';

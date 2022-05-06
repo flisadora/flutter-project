@@ -2,15 +2,35 @@
 
 A new WalletWatch Flutter project.
 
-## Getting Started
+## Introduction to Mobile Computing
 
-This project is a starting point for a Flutter application.
+This project is an academic project application.
 
-A few resources to get you started if this is your first Flutter project:
+This application's objective is to help users to manage its financial expenses by setting a budget and registering expenses.
+It will be possible to see reports according to the type of expense or time frame.
+The user will be able to establish priorities for how he/she spends money to achieve financial goals, therefore registering how much money is spent and on what.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Group
+
+Students collaborators:
+```
+91322 - Isadora Loredo
+91359 - Juan Lessa
+98411 - Ricardo Ferreira
+```
+
+### Features
+
+Sensors implemented
+- [x] fingerprint
+- [x] QR code
+- [x] google Maps
+
+
+### Running the project
+
+To run this application is necessary to have an Android mobile phone with the fingerprint sensor enabled.
+
+1. get dependencies
+2. run the app

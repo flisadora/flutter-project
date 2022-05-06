@@ -7,7 +7,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 
 class ExpenseForm extends StatefulWidget {
-  final Expense? expense;
+  late final Expense? expense;
 
   ExpenseForm([this.expense]);
 
@@ -21,20 +21,15 @@ class _ExpenseFormState extends State<ExpenseForm> {
   final ExpenseDao _dao = ExpenseDao();
   String? _selectedValue;
   final List<String> items = expenseTypeList(ExpenseTypeMap);
-  TextEditingController _valueController =
-  TextEditingController();
-  TextEditingController _labelController =
-  TextEditingController();
+  TextEditingController _valueController = TextEditingController();
+  TextEditingController _labelController = TextEditingController();
   DateTime _chosenDateTime = DateTime.now();
   int _expenseId = 0;
 
   @override
   Widget build(BuildContext context) {
-    if(widget.expense != null) {
-      print('expense not null');
-      print(widget.expense.toString());
-      _editExpense();
-    }
+    if(widget.expense != null) _editExpense(widget.expense!);
+
     return Scaffold(
       appBar: AppBar(title: Text(_titleAppBar)),
       resizeToAvoidBottomInset: false,
@@ -100,6 +95,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                 child: Container(
                   height: 120,
                   child: CupertinoDatePicker(
+                    key: UniqueKey(),
                     mode: CupertinoDatePickerMode.date,
                     initialDateTime: _chosenDateTime,
                     maximumDate: DateTime.now(),
@@ -125,10 +121,10 @@ class _ExpenseFormState extends State<ExpenseForm> {
                         _chosenDateTime.toString().substring(0, 10)
                       );
                       if(widget.expense != null){
-                        _dao.update(newExpense).then((id) => Navigator.pop(context));
+                        _dao.update(newExpense).then((id) => Navigator.pop(context, _expenseId));
                       }
                       else {
-                        _dao.save(newExpense).then((id) => Navigator.pop(context));
+                        _dao.save(newExpense).then((id) => Navigator.pop(context, _expenseId));
                       };
                     },
                   ),
@@ -138,31 +134,38 @@ class _ExpenseFormState extends State<ExpenseForm> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          debugPrint('qr code scan call');
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => QrCodeScan(),
-            ),
-          ).then((value) => setState(() {} ));
-        },
-        child: Icon(
-          //Icons.qr_code_2_sharp,
-          Icons.more_vert,
-          size: 32,
+      floatingActionButton: Visibility(
+        visible: (widget.expense == null),
+        child: FloatingActionButton(
+          onPressed: () async {
+            final Expense? qrExpense = await
+            Navigator.push(context,
+              MaterialPageRoute<Expense>(
+                builder: (context) => QrCodeScan(),
+              ),
+            );
+            setState(() {
+              _editExpense(qrExpense);
+            });
+          },
+          child: Icon(
+            Icons.more_vert,
+            size: 32,
+          ),
         ),
       ),
     );
   }
 
-  void _editExpense() {
-    _titleAppBar = 'Edit Expense';
-    _textButtonCreate = 'Save';
-    _selectedValue = widget.expense!.type;
-    _labelController.text = widget.expense!.label;
-    _valueController.text = widget.expense!.value.toString();
-    _chosenDateTime = DateTime.tryParse(widget.expense!.date)!;
-    _expenseId = widget.expense!.id;
+  void _editExpense(Expense? expense) {
+    if(widget.expense!=null) {
+      _titleAppBar = 'Edit Expense';
+      _textButtonCreate = 'Save';
+    }
+    _selectedValue = expense!.type;
+    _labelController.text = expense.label;
+    _valueController.text = expense.value.toString();
+    _chosenDateTime = DateTime.tryParse(expense.date)!;
+    _expenseId = expense.id;
   }
 }

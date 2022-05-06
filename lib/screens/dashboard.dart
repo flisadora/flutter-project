@@ -1,8 +1,16 @@
-import 'package:bytebank_persistence/screens/contacts_list.dart';
+import 'package:bytebank_persistence/screens/atm_locator.dart';
+import 'package:bytebank_persistence/screens/search.dart';
 import 'package:bytebank_persistence/screens/expenses_list.dart';
+<<<<<<< HEAD
 import 'package:bytebank_persistence/screens/graphicsPage.dart';
 import 'package:bytebank_persistence/screens/transactions_list.dart';
+=======
+import 'package:bytebank_persistence/services/geolocator_service.dart';
+import 'package:bytebank_persistence/services/places_service.dart';
+>>>>>>> master
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 const _titleAppBar = 'WalletWatch';
 
@@ -13,59 +21,6 @@ class Dashboard extends StatelessWidget {
       appBar: AppBar(
         title: Text(_titleAppBar),
       ),
-      /*body: GridView.count(
-        // Create a grid with 2 columns. If you change the scrollDirection to
-        // horizontal, this produces 2 rows.
-        crossAxisCount: 2,
-        // Generate 100 widgets that display their index in the List.
-        children: List.generate(4, (index) {
-          return Center(
-            child: Text(
-              'Item $index',
-              style: Theme.of(context).textTheme.headline5,
-            ),
-          );
-        }),
-      ),*/
-      /*body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('images/ww_logo.png'),
-          ),
-          Container(
-            height: 100,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                _FeatureItem(
-                  'Transfer',
-                  Icons.monetization_on,
-                  onClick: () {
-                    _ShowContactsList(context);
-                  },
-                ),
-                _FeatureItem(
-                  'Transaction Feed',
-                  Icons.description,
-                  onClick: () {
-                    _ShowTransactionsList(context);
-                  },
-                ),
-                _FeatureItem(
-                  'Transaction Feed',
-                  Icons.star,
-                  onClick: () {
-                    debugPrint('shine on');
-                  },
-                ),
-              ],
-            ),
-          )
-        ],
-      ),*/
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,6 +42,7 @@ class Dashboard extends StatelessWidget {
                   },
                 ),
                 _FeatureItem(
+<<<<<<< HEAD
                   'Graphic',
                   Icons.money,
                   onClick: () {
@@ -96,15 +52,19 @@ class Dashboard extends StatelessWidget {
                 _FeatureItem(
                   'Transaction Feed',
                   Icons.description,
+=======
+                  'ATM Locator',
+                  Icons.map,
+>>>>>>> master
                   onClick: () {
-                    _ShowTransactionsList(context);
+                    _ShowSearch(context);
                   },
                 ),
                 _FeatureItem(
-                  'Transaction Feed',
-                  Icons.star,
+                  'Graphics',
+                  Icons.graphic_eq,
                   onClick: () {
-                    debugPrint('shine on');
+                    print('where are the graphics???');
                   },
                 ),
               ],
@@ -115,6 +75,7 @@ class Dashboard extends StatelessWidget {
     );
   }
 
+<<<<<<< HEAD
   void _ShowGraphic(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => GraphicsPage()),
@@ -122,16 +83,63 @@ class Dashboard extends StatelessWidget {
   }
 
   void _ShowTransactionsList(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => TransactionsList()),
-    );
-  }
-
+=======
   void _ShowExpensesList(BuildContext context) {
+>>>>>>> master
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => ExpensesList()),
     );
   }
+
+  void _ShowAtmLocator(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => AtmLocator()
+      ),
+    );
+  }
+
+  void _ShowSearch(BuildContext context) async {
+    final locatorService = GeoLocatorService();
+    final placesService = PlacesService();
+
+    final locationPermission = await Geolocator.checkPermission();
+
+    if (locationPermission != LocationPermission.always && locationPermission != LocationPermission.whileInUse) {
+      await Geolocator.requestPermission();
+    }
+
+    print('cade????? 1');
+    final location = await locatorService.getLocation();
+    print('cade????? 2');
+    final places = await placesService.getPlaces(location.latitude, location.longitude, BitmapDescriptor.defaultMarker,);
+    print(places.toList().toString());
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => Search(location, places),
+      ),
+    );
+
+    /*
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => MultiProvider(
+          providers: [
+            ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
+              update: (context, position, icon, places){
+                return
+                  (position != null) ?
+                  placesService.getPlaces(position.latitude, position.longitude, icon)
+                      : null;
+              },
+            )
+          ],
+          child: Search(location, places,)
+        ),
+      ),
+    );*/
+  }
+
 }
 
 class _FeatureItem extends StatelessWidget {
