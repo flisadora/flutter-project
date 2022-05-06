@@ -1,4 +1,4 @@
-import 'package:bytebank_persistence/screens/atm_locator.dart';
+import 'package:bytebank_persistence/models/place.dart';
 import 'package:bytebank_persistence/screens/search.dart';
 import 'package:bytebank_persistence/screens/expenses_list.dart';
 import 'package:bytebank_persistence/screens/graphicsPage.dart';
@@ -8,81 +8,95 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:bytebank_persistence/sensors/on_shake.dart';
+import 'package:provider/provider.dart';
+import 'package:shake/shake.dart';
 
 const _titleAppBar = 'WalletWatch';
 
 class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_titleAppBar),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset('images/ww_logo.png'),
+    late ShakeDetector detector;
+    return Stack(
+      children: <Widget>[
+        OnShake(),
+        Scaffold(
+          appBar: AppBar(
+            title: Text(_titleAppBar),
           ),
-          Container(
-            height: 120,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                _FeatureItem(
-                  'Expenses',
-                  Icons.money,
-                  onClick: () {
-                    _ShowExpensesList(context);
-                  },
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset('images/ww_logo.png'),
+              ),
+              Container(
+                height: 120,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: <Widget>[
+                    _FeatureItem(
+                      'Expenses',
+                      Icons.money,
+                      onClick: () {
+                        _ShowExpensesList(context);
+                      },
+                    ),
+                    _FeatureItem(
+                      'ATM Locator',
+                      Icons.map,
+                      onClick: () {
+                        _ShowSearch(context);
+                      },
+                    ),
+                    _FeatureItem(
+                      'Graphics',
+                      Icons.graphic_eq,
+                      onClick: () {
+                        _ShowGraphic(context);
+                      },
+                    ),
+                    _FeatureItem(
+                      'Shake Sensor',
+                      Icons.compare_arrows,
+                      onClick: () {
+                        _ShowShake(context);
+                      },
+                    ),
+                  ],
                 ),
-                _FeatureItem(
-                  'ATM Locator',
-                  Icons.map,
-                  onClick: () {
-                    _ShowSearch(context);
-                  },
-                ),
-                _FeatureItem(
-                  'Graphics',
-                  Icons.graphic_eq,
-                  onClick: () {
-                    _ShowGraphic(context);
-                  },
-                ),
-                _FeatureItem(
-                  'Shake Sensor',
-                  Icons.compare_arrows,
-                  onClick: () {
-                    _ShowShake(context);
-                  },
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
+              )
+            ],
+          ),
+        ),
+      ]
     );
   }
 
   void _ShowGraphic(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => GraphicsPage()),
+      MaterialPageRoute(
+        settings: RouteSettings(name: "/GraphicsPage"),
+        builder: (context) => GraphicsPage()),
     );
   }
 
   void _ShowExpensesList(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => ExpensesList()),
+      MaterialPageRoute(
+        settings: RouteSettings(name: "/ExpensesList"),
+        builder: (context) => ExpensesList()
+      ),
     );
   }
 
   void _ShowShake(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (context) => OnShake()
+        settings: RouteSettings(name: "/OnShake"),
+        builder: (context) => OnShake()
       ),
     );
   }
@@ -97,35 +111,27 @@ class Dashboard extends StatelessWidget {
       await Geolocator.requestPermission();
     }
 
-    print('cade????? 1');
     final location = await locatorService.getLocation();
-    print('cade????? 2');
     final places = await placesService.getPlaces(location.latitude, location.longitude, BitmapDescriptor.defaultMarker,);
+
     print(places.toList().toString());
+
+    ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
+      update: (context, position, icon, places){
+        return
+          (position != null) ?
+          placesService.getPlaces(position.latitude, position.longitude, icon)
+              : null;
+      },
+    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('ATM Search')));
     Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (context) => Search(location, places),
+        settings: RouteSettings(name: "/Search"),
+        builder: (context) => Search(location, places),
       ),
     );
-
-    /*
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => MultiProvider(
-          providers: [
-            ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
-              update: (context, position, icon, places){
-                return
-                  (position != null) ?
-                  placesService.getPlaces(position.latitude, position.longitude, icon)
-                      : null;
-              },
-            )
-          ],
-          child: Search(location, places,)
-        ),
-      ),
-    );*/
   }
 
 }

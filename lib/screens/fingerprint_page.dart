@@ -73,7 +73,9 @@ class FingerprintPage extends StatelessWidget {
 
           if (isAuthenticated) {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => Dashboard()),
+              MaterialPageRoute(
+                settings: RouteSettings(name: "/Dashboard"),
+                builder: (context) => Dashboard()),
             );
           }
         },

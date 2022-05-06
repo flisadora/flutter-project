@@ -141,6 +141,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
             final Expense? qrExpense = await
             Navigator.push(context,
               MaterialPageRoute<Expense>(
+                settings: RouteSettings(name: "/QrCodeScan"),
                 builder: (context) => QrCodeScan(),
               ),
             );

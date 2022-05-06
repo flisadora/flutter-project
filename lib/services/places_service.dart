@@ -12,6 +12,11 @@ class PlacesService {
     var response = await http.get(url);
     var json = await convert.jsonDecode(response.body);
     var jsonResults = json['results'] as List;
+    jsonResults.forEach((result) => (result.forEach((key, value) {
+      if (value is double) {
+        if(value == null) value= 0;
+      }
+    })));
     return jsonResults.map((place) => Place.fromJson(place, icon)).toList();
   }
 

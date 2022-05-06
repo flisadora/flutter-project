@@ -74,7 +74,8 @@ class ExpensesListState extends State<ExpensesList> {
                       return _ExpenseItem(expense, onClick: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) => ExpenseForm(expense)
+                            settings: RouteSettings(name: "/ExpenseForm"),
+                            builder: (context) => ExpenseForm(expense)
                           )
                         );
                       },);
@@ -91,6 +92,7 @@ class ExpensesListState extends State<ExpensesList> {
         onPressed: () async {
           await Navigator.of(context).push(
             MaterialPageRoute(
+              settings: RouteSettings(name: "/ExpenseForm"),
               builder: (context) => ExpenseForm(),
             ),
           ).then((_) => setState(() {} ));
