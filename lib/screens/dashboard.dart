@@ -2,7 +2,6 @@ import 'package:bytebank_persistence/screens/atm_locator.dart';
 import 'package:bytebank_persistence/screens/search.dart';
 import 'package:bytebank_persistence/screens/expenses_list.dart';
 import 'package:bytebank_persistence/screens/graphicsPage.dart';
-import 'package:bytebank_persistence/screens/transactions_list.dart';
 import 'package:bytebank_persistence/services/geolocator_service.dart';
 import 'package:bytebank_persistence/services/places_service.dart';
 import 'package:flutter/material.dart';
