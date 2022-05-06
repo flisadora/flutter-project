@@ -26,6 +26,9 @@ Sensors implemented
 - [x] fingerprint
 - [x] QR code
 - [x] google Maps
+- [x] gps geolocator
+- [x] graphics
+- [x] shake 
 
 
 ### Running the project
