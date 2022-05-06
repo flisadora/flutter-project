@@ -14,13 +14,11 @@ The user will be able to establish priorities for how he/she spends money to ach
 ### Group
 
 Students collaborators:
-
+```
 91322 - Isadora Loredo
-
 91359 - Juan Lessa
-
 98411 - Ricardo Ferreira
-
+```
 
 ### Features
 
