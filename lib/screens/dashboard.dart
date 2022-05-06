@@ -1,5 +1,6 @@
 import 'package:bytebank_persistence/screens/contacts_list.dart';
 import 'package:bytebank_persistence/screens/expenses_list.dart';
+import 'package:bytebank_persistence/screens/graphicsPage.dart';
 import 'package:bytebank_persistence/screens/transactions_list.dart';
 import 'package:flutter/material.dart';
 
@@ -86,6 +87,13 @@ class Dashboard extends StatelessWidget {
                   },
                 ),
                 _FeatureItem(
+                  'Graphic',
+                  Icons.money,
+                  onClick: () {
+                    _ShowGraphic(context);
+                  },
+                ),
+                _FeatureItem(
                   'Transaction Feed',
                   Icons.description,
                   onClick: () {
@@ -104,6 +112,12 @@ class Dashboard extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+
+  void _ShowGraphic(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => GraphicsPage()),
     );
   }
 
