@@ -15,9 +15,9 @@ The user will be able to establish priorities for how he/she spends money to ach
 
 Students collaborators:
 
-91322. Isadora Loredo
-91359. Juan Lessa
-98411. Ricardo Ferreira
+91322 - Isadora Loredo
+91359 - Juan Lessa
+98411 - Ricardo Ferreira
 
 
 ### Features
