@@ -9,7 +9,7 @@ import 'package:bytebank_persistence/models/expense_type.dart';
 
 import '../components/centered_message.dart';
 
-const _titleAppBar = 'WalletWatch';
+const _titleAppBar = 'Expenses Graphic';
 
 class GraphicsPage extends StatefulWidget {
   GraphicsPage({Key? key}) : super(key: key);
@@ -23,8 +23,8 @@ class GraphicsPageState extends State<GraphicsPage> {
   final List<String> items = expenseTypeList(ExpenseTypeMap);
   double total = 0;
   List<double> graphicData = [];
-  int index = 0;
-  String graphicLabel = '';
+  int index = -1;
+  String graphicLabel = 'Total';
   double graphicValue = 0.00;
   List<double> transactions = [];
   late NumberFormat real;
@@ -34,6 +34,9 @@ class GraphicsPageState extends State<GraphicsPage> {
     real = NumberFormat.currency(locale: "en_US", symbol: "€");
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(_titleAppBar),
+      ),
       body: FutureBuilder<List<Expense>>(
         initialData: [],
         future: _dao.findAll(),
@@ -51,7 +54,27 @@ class GraphicsPageState extends State<GraphicsPage> {
                 if (expenses.isNotEmpty) {
                   print('expenses');
                   print(expenses.length);
-                  return loadGraphic();
+                  if (graphicData.length == 0) {
+                    for (var i = 0; i < items.length; i++) {
+                      graphicData.add(0);
+                    }
+
+                    for (var i = 0; i < expenses.length; i++) {
+                      for (var j = 0; j < items.length; j++) {
+                        if (expenses[i].type == items[j]) {
+                          graphicData[j] += expenses[i].value as double;
+                          total += expenses[i].value as double;
+                        }
+                      }
+                    }
+                  }
+                  graphicValue = total;
+                  graphicLabel = 'total';
+
+                  return Container(
+                      child: Column(
+                    children: [loadGraphic()],
+                  ));
                 }
               }
               return CenteredMessage('No transactions found',
@@ -63,7 +86,7 @@ class GraphicsPageState extends State<GraphicsPage> {
     );
   }
 
-  loadWallet() {
+  List<PieChartSectionData> loadWallet() {
     setGraphicData(index);
     final lenTransactions = graphicData.length;
     return List.generate(lenTransactions, (i) {
@@ -74,11 +97,11 @@ class GraphicsPageState extends State<GraphicsPage> {
       double porcent = 0;
 
       porcent = graphicData[i] * 100 / total;
-
+      print(i);
       return PieChartSectionData(
         color: color,
         value: porcent,
-        title: '${items[i]} ${porcent.toStringAsFixed(0)}%',
+        title: '${porcent.toStringAsFixed(0)}%',
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
@@ -86,25 +109,10 @@ class GraphicsPageState extends State<GraphicsPage> {
           color: Colors.black87,
         ),
       );
-    });
+    }, growable: false);
   }
 
   loadGraphic() {
-    for (var i = 0; i < items.length; i++) {
-      graphicData.add(0);
-    }
-
-    for (var i = 0; i < expenses.length; i++) {
-      for (var j = 0; j < items.length; j++) {
-        if (expenses[i].type == items[j]) {
-          graphicData[j] += expenses[i].value as double;
-          total += expenses[i].value as double;
-        }
-      }
-    }
-    print(graphicData);
-    print(total);
-
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -116,8 +124,10 @@ class GraphicsPageState extends State<GraphicsPage> {
               centerSpaceRadius: 112,
               sections: loadWallet(),
               pieTouchData: PieTouchData(
-                touchCallback: (touch) => (() {
+                touchCallback: (touch) => setState(() {
                   index = touch.touchedSection!.touchedSectionIndex;
+                  print('ind');
+                  print(index);
                   setGraphicData(index);
                 }),
               ),
@@ -126,20 +136,26 @@ class GraphicsPageState extends State<GraphicsPage> {
         ),
         Column(
           children: [
-            Text(graphicLabel),
-            Text(real.format(graphicValue)),
+            Text(
+              graphicLabel,
+              style: TextStyle(fontSize: 20, color: Colors.teal),
+            ),
+            Text(
+              real.format(graphicValue),
+              style: TextStyle(fontSize: 28),
+            ),
           ],
         )
       ],
     );
   }
 
-  setGraphicData(index) {
+  setGraphicData(int index) {
     if (index < 0) return;
 
-    if (index == graphicData.length) {
-      graphicValue = total;
+    if (index == -1) {
       graphicLabel = 'Total';
+      graphicValue = total;
     } else {
       graphicValue = graphicData[index];
       graphicLabel = items[index];
