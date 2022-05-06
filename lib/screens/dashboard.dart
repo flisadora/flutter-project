@@ -1,16 +1,14 @@
 import 'package:bytebank_persistence/screens/atm_locator.dart';
 import 'package:bytebank_persistence/screens/search.dart';
 import 'package:bytebank_persistence/screens/expenses_list.dart';
-<<<<<<< HEAD
 import 'package:bytebank_persistence/screens/graphicsPage.dart';
 import 'package:bytebank_persistence/screens/transactions_list.dart';
-=======
 import 'package:bytebank_persistence/services/geolocator_service.dart';
 import 'package:bytebank_persistence/services/places_service.dart';
->>>>>>> master
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:bytebank_persistence/sensors/on_shake.dart';
 
 const _titleAppBar = 'WalletWatch';
 
@@ -42,20 +40,8 @@ class Dashboard extends StatelessWidget {
                   },
                 ),
                 _FeatureItem(
-<<<<<<< HEAD
-                  'Graphic',
-                  Icons.money,
-                  onClick: () {
-                    _ShowGraphic(context);
-                  },
-                ),
-                _FeatureItem(
-                  'Transaction Feed',
-                  Icons.description,
-=======
                   'ATM Locator',
                   Icons.map,
->>>>>>> master
                   onClick: () {
                     _ShowSearch(context);
                   },
@@ -64,7 +50,14 @@ class Dashboard extends StatelessWidget {
                   'Graphics',
                   Icons.graphic_eq,
                   onClick: () {
-                    print('where are the graphics???');
+                    _ShowGraphic(context);
+                  },
+                ),
+                _FeatureItem(
+                  'Shake Sensor',
+                  Icons.compare_arrows,
+                  onClick: () {
+                    _ShowShake(context);
                   },
                 ),
               ],
@@ -75,26 +68,22 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
   void _ShowGraphic(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => GraphicsPage()),
     );
   }
 
-  void _ShowTransactionsList(BuildContext context) {
-=======
   void _ShowExpensesList(BuildContext context) {
->>>>>>> master
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => ExpensesList()),
     );
   }
 
-  void _ShowAtmLocator(BuildContext context) {
+  void _ShowShake(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (context) => AtmLocator()
+          builder: (context) => OnShake()
       ),
     );
   }

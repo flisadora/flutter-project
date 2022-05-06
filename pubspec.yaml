@@ -42,6 +42,7 @@ dependencies:
   qr_code_scanner: ^0.7.0
   dropdown_button2:
   grouped_list: ^4.2.0
+  shake: ^2.1.0
 
   fl_chart: ^0.36.2
 

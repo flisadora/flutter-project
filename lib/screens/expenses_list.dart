@@ -31,7 +31,6 @@ class ExpensesList extends StatefulWidget {
 }
 
 class ExpensesListState extends State<ExpensesList> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
