@@ -1,15 +1,11 @@
-import 'package:bytebank_persistence/models/place.dart';
 import 'package:bytebank_persistence/screens/atm_locator.dart';
-import 'package:bytebank_persistence/screens/contacts_list.dart';
 import 'package:bytebank_persistence/screens/search.dart';
 import 'package:bytebank_persistence/screens/expenses_list.dart';
-import 'package:bytebank_persistence/screens/transactions_list.dart';
 import 'package:bytebank_persistence/services/geolocator_service.dart';
 import 'package:bytebank_persistence/services/places_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
 
 const _titleAppBar = 'WalletWatch';
 
@@ -41,24 +37,17 @@ class Dashboard extends StatelessWidget {
                   },
                 ),
                 _FeatureItem(
-                  'Transaction Feed',
-                  Icons.description,
-                  onClick: () {
-                    _ShowTransactionsList(context);
-                  },
-                ),
-                _FeatureItem(
                   'ATM Locator',
-                  Icons.star,
-                  onClick: () {
-                    _ShowAtmLocator(context);
-                  },
-                ),
-                _FeatureItem(
-                  'ATM Locator new version',
-                  Icons.search,
+                  Icons.map,
                   onClick: () {
                     _ShowSearch(context);
+                  },
+                ),
+                _FeatureItem(
+                  'Graphics',
+                  Icons.graphic_eq,
+                  onClick: () {
+                    print('where are the graphics???');
                   },
                 ),
               ],
@@ -66,12 +55,6 @@ class Dashboard extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-
-  void _ShowTransactionsList(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => TransactionsList()),
     );
   }
 
