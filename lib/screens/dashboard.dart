@@ -1,7 +1,11 @@
-import 'package:bytebank_persistence/screens/contacts_list.dart';
+import 'package:bytebank_persistence/screens/atm_locator.dart';
+import 'package:bytebank_persistence/screens/search.dart';
 import 'package:bytebank_persistence/screens/expenses_list.dart';
-import 'package:bytebank_persistence/screens/transactions_list.dart';
+import 'package:bytebank_persistence/services/geolocator_service.dart';
+import 'package:bytebank_persistence/services/places_service.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 const _titleAppBar = 'WalletWatch';
 
@@ -33,17 +37,17 @@ class Dashboard extends StatelessWidget {
                   },
                 ),
                 _FeatureItem(
-                  'Transaction Feed',
-                  Icons.description,
+                  'ATM Locator',
+                  Icons.map,
                   onClick: () {
-                    _ShowTransactionsList(context);
+                    _ShowSearch(context);
                   },
                 ),
                 _FeatureItem(
-                  'Transaction Feed',
-                  Icons.star,
+                  'Graphics',
+                  Icons.graphic_eq,
                   onClick: () {
-                    debugPrint('shine on');
+                    print('where are the graphics???');
                   },
                 ),
               ],
@@ -54,17 +58,61 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  void _ShowTransactionsList(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => TransactionsList()),
-    );
-  }
-
   void _ShowExpensesList(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => ExpensesList()),
     );
   }
+
+  void _ShowAtmLocator(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => AtmLocator()
+      ),
+    );
+  }
+
+  void _ShowSearch(BuildContext context) async {
+    final locatorService = GeoLocatorService();
+    final placesService = PlacesService();
+
+    final locationPermission = await Geolocator.checkPermission();
+
+    if (locationPermission != LocationPermission.always && locationPermission != LocationPermission.whileInUse) {
+      await Geolocator.requestPermission();
+    }
+
+    print('cade????? 1');
+    final location = await locatorService.getLocation();
+    print('cade????? 2');
+    final places = await placesService.getPlaces(location.latitude, location.longitude, BitmapDescriptor.defaultMarker,);
+    print(places.toList().toString());
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => Search(location, places),
+      ),
+    );
+
+    /*
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => MultiProvider(
+          providers: [
+            ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
+              update: (context, position, icon, places){
+                return
+                  (position != null) ?
+                  placesService.getPlaces(position.latitude, position.longitude, icon)
+                      : null;
+              },
+            )
+          ],
+          child: Search(location, places,)
+        ),
+      ),
+    );*/
+  }
+
 }
 
 class _FeatureItem extends StatelessWidget {

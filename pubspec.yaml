@@ -31,8 +31,13 @@ dependencies:
     sdk: flutter
   sqflite:
   path:
-  http:
+  http: ^0.13.4
   http_interceptor:
+  google_maps_flutter: ^2.1.4
+  geolocator: ^8.2.0
+  provider: ^6.0.2
+  url_launcher: ^6.1.0
+  flutter_rating_bar: ^4.0.0
   qr_code_scanner: ^0.7.0
   dropdown_button2:
   grouped_list: ^4.2.0

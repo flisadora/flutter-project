@@ -1,5 +1,3 @@
-import 'package:bytebank_persistence/database/app_database.dart';
-import 'package:bytebank_persistence/database/dao/expense_dao.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/dashboard.dart';
@@ -27,7 +25,7 @@ class WalletWatchApp extends StatelessWidget {
           textTheme: ButtonTextTheme.primary,
         ),
       ),
-      home: Dashboard(),
+      home: FingerprintPage(),
       debugShowCheckedModeBanner: false,
     );
   }
