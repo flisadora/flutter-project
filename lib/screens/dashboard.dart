@@ -48,6 +48,8 @@ class Dashboard extends StatelessWidget {
                       'ATM Locator',
                       Icons.map,
                       onClick: () {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('ATM Search CALL')));
                         _ShowSearch(context);
                       },
                     ),
@@ -112,20 +114,22 @@ class Dashboard extends StatelessWidget {
     }
 
     final location = await locatorService.getLocation();
-    final places = await placesService.getPlaces(location.latitude, location.longitude, BitmapDescriptor.defaultMarker,);
+    final places = await placesService.getPlaces(
+      location.latitude,
+      location.longitude,
+      BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed)
+    );
 
-    print(places.toList().toString());
-
-    ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
+    /*ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
       update: (context, position, icon, places){
         return
           (position != null) ?
           placesService.getPlaces(position.latitude, position.longitude, icon)
               : null;
       },
-    );
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('ATM Search')));
+    );*/
+
+
     Navigator.of(context).push(
       MaterialPageRoute(
         settings: RouteSettings(name: "/Search"),
