@@ -1,3 +1,4 @@
+import 'package:bytebank_persistence/screens/fingerprint_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
 
@@ -14,9 +15,9 @@ class _OnShakeState extends State<OnShake> {
       onPhoneShake: () {
         //ScaffoldMessenger.of(context)
             //.showSnackBar(SnackBar(content: Text('Shake detector!')));
-        Navigator.popUntil(
-          context,
-          (route) => route.isFirst);
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => FingerprintPage()),
+          ModalRoute.withName('/') );
       },
       minimumShakeCount: 1,
       shakeSlopTimeMS: 500,
