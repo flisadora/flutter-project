@@ -48,8 +48,12 @@ class Dashboard extends StatelessWidget {
                       'ATM Locator',
                       Icons.map,
                       onClick: () {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text('ATM Search CALL')));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            duration: Duration(seconds: 2),
+                            content: Text('Loading map...')
+                          )
+                        );
                         _ShowSearch(context);
                       },
                     ),
@@ -119,16 +123,6 @@ class Dashboard extends StatelessWidget {
       location.longitude,
       BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed)
     );
-
-    /*ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
-      update: (context, position, icon, places){
-        return
-          (position != null) ?
-          placesService.getPlaces(position.latitude, position.longitude, icon)
-              : null;
-      },
-    );*/
-
 
     Navigator.of(context).push(
       MaterialPageRoute(

@@ -7,7 +7,7 @@ class PlacesService {
 
   Future<List<Place>> getPlaces(double lat, double lng, BitmapDescriptor icon) async {
     var key = 'AIzaSyAlbEKTNIZBg-mEFOsRyvEwaelHHU2mZS0';
-    var url = Uri.parse('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&type=atm&radius=1500&key=$key');
+    var url = Uri.parse('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$lat,$lng&type=atm&rankby=distance&key=$key');
     print('URL: $url');
     var response = await http.get(url);
     var json = await convert.jsonDecode(response.body);
