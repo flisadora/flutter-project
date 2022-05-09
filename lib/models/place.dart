@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Place{
   final String name;
-  final bool open;
+  final int open;
   final String vicinity;
   final Geometry geometry;
   final BitmapDescriptor icon;
@@ -12,8 +12,8 @@ class Place{
 
   Place.fromJson(Map<dynamic, dynamic> parsedJson, BitmapDescriptor icon)
     : name = parsedJson['name'],
-      open = (parsedJson.containsKey('opening_hours')) ? parsedJson['opening_hours']['open_now'] : false,
+      open = (parsedJson.containsKey('opening_hours')) ? ((parsedJson['opening_hours']['open_now']) ? 1 : 2) : 3,
       vicinity = parsedJson['vicinity'],
       geometry = Geometry.fromJson(parsedJson['geometry']),
-      icon=icon;
+      icon = icon;
 }

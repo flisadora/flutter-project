@@ -13,8 +13,13 @@ class _OnShakeState extends State<OnShake> {
     super.initState();
     ShakeDetector detector = ShakeDetector.autoStart(
       onPhoneShake: () {
-        //ScaffoldMessenger.of(context)
-            //.showSnackBar(SnackBar(content: Text('Shake detector!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: Duration(seconds: 2),
+              content: Text('Shake detected, the app was locked!'),
+              behavior: SnackBarBehavior.floating
+            )
+        );
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (BuildContext context) => FingerprintPage()),
           ModalRoute.withName('/') );

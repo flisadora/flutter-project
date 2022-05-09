@@ -49,7 +49,8 @@ class Dashboard extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             duration: Duration(seconds: 2),
-                            content: Text('Loading map...')
+                            content: Text('Loading map...'),
+                            behavior: SnackBarBehavior.floating
                           )
                         );
                         _ShowSearch(context);
@@ -60,13 +61,6 @@ class Dashboard extends StatelessWidget {
                       Icons.graphic_eq,
                       onClick: () {
                         _ShowGraphic(context);
-                      },
-                    ),
-                    _FeatureItem(
-                      'Shake Sensor',
-                      Icons.compare_arrows,
-                      onClick: () {
-                        _ShowShake(context);
                       },
                     ),
                   ],

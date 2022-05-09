@@ -34,7 +34,7 @@ class Search extends StatelessWidget {
               initialCameraPosition: CameraPosition(
                 target: LatLng(location!.latitude,
                     location!.longitude),
-                zoom: 15.0),
+                zoom: 14.0),
               zoomGesturesEnabled: true,
               markers: Set<Marker>.of(markers),
               myLocationEnabled: true,
@@ -54,17 +54,8 @@ class Search extends StatelessWidget {
                       children: <Widget>[
                         SizedBox(height: 3.0),
                         Row(
-                          children: <Widget>[
-                            (places[index].open == 1) ?
-                              Text(
-                                'Open',
-                                style: TextStyle(color: Colors.green),
-                              )
-                            :
-                              Text(
-                                'Closed',
-                                style: TextStyle(color: Colors.red),
-                              ),
+                          children: <Widget> [
+                            _isOpen(places[index].open),
                             Text(' \u00b7 ', style: TextStyle(fontWeight: FontWeight.bold)),
                             FutureBuilder<double>(
                               future: _getDistance(places[index].geometry.location.lat, places[index].geometry.location.lng),
@@ -125,5 +116,23 @@ class Search extends StatelessWidget {
       placeLatitude, placeLongitude
     );
     return distance;
+  }
+
+  Widget _isOpen(int open) {
+    Widget widget;
+    switch (open) {
+      case 1: {
+        widget = Text('Open', style: TextStyle(color: Colors.green));
+      } break;
+      case 2: {
+        widget = Text('Closed', style: TextStyle(color: Colors.red));
+      } break;
+      case 3: {
+        widget = Text('Can be closed');
+      } break;
+      default:
+        widget = Container();
+    }
+    return widget;
   }
 }
