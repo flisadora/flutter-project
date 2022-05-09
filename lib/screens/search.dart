@@ -45,7 +45,6 @@ class Search extends StatelessWidget {
             child: (places.length > 0) ? ListView.builder(
               itemCount: places.length,
               itemBuilder: (context, index) {
-                Future<int> distance = _getDistance(places[index].geometry.location.lat, places[index].geometry.location.lng);
                 return Card(
                   child: ListTile(
                     title: Text(places[index].name),
@@ -67,8 +66,17 @@ class Search extends StatelessWidget {
                                 style: TextStyle(color: Colors.red),
                               ),
                             Text(' \u00b7 ', style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(
-                              '$distance m',
+                            FutureBuilder<double>(
+                              future: _getDistance(places[index].geometry.location.lat, places[index].geometry.location.lng),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  final double distance = snapshot.data as double;
+                                  final int roudDistance = distance.round();
+                                  return Text('$roudDistance meters');
+                                }
+                                return Text('');
+                              }
                             ),
                           ]
                         ),
@@ -109,9 +117,9 @@ class Search extends StatelessWidget {
     }
   }
 
-  Future<int> _getDistance(double placeLatitude, double placeLongitude) async {
+  Future<double> _getDistance(double placeLatitude, double placeLongitude) async {
     final geoService = GeoLocatorService();
-    late int distance = 0;
+    late double distance = 0;
     distance = await geoService.getDistance(
       location!.latitude, location!.longitude,
       placeLatitude, placeLongitude

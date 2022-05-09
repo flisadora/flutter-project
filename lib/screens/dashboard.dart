@@ -1,4 +1,3 @@
-import 'package:bytebank_persistence/models/place.dart';
 import 'package:bytebank_persistence/screens/search.dart';
 import 'package:bytebank_persistence/screens/expenses_list.dart';
 import 'package:bytebank_persistence/screens/graphicsPage.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:bytebank_persistence/sensors/on_shake.dart';
-import 'package:provider/provider.dart';
 import 'package:shake/shake.dart';
 
 const _titleAppBar = 'WalletWatch';
