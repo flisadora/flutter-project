@@ -71,14 +71,18 @@ class ExpensesListState extends State<ExpensesList> {
                       ),
                     ),
                     itemBuilder: (context, expense) {
-                      return _ExpenseItem(expense, onClick: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            settings: RouteSettings(name: "/ExpenseForm"),
-                            builder: (context) => ExpenseForm(expense)
-                          )
-                        );
-                      },);
+                      return _ExpenseItem(
+                        expense,
+                        onClick: () async {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              settings: RouteSettings(name: "/ExpenseForm"),
+                              builder: (context) => ExpenseForm(expense)
+                            )
+                          );
+                          setState(() {});
+                        },
+                      );
                     },
                   );
                 }
@@ -95,7 +99,8 @@ class ExpensesListState extends State<ExpensesList> {
               settings: RouteSettings(name: "/ExpenseForm"),
               builder: (context) => ExpenseForm(),
             ),
-          ).then((_) => setState(() {} ));
+          );
+          setState(() {});
         },
         child: Icon(Icons.add),
       ),
@@ -134,16 +139,11 @@ class _ExpenseItem extends StatelessWidget{
         trailing: TextButton(
           onPressed: () {
             _dao.delete(expense);
-            FutureBuilder<List<Expense>>(
-              initialData: [],
-              future: _dao.findAll(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ExpensesList();
-                } else {
-                  return Progress();
-                }
-              }
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ExpensesList(),
+              ),
             );
           },
           child: Icon(Icons.delete)
