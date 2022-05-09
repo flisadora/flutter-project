@@ -1,4 +1,3 @@
-import 'package:bytebank_persistence/models/place.dart';
 import 'package:bytebank_persistence/screens/search.dart';
 import 'package:bytebank_persistence/screens/expenses_list.dart';
 import 'package:bytebank_persistence/screens/graphicsPage.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:bytebank_persistence/sensors/on_shake.dart';
-import 'package:provider/provider.dart';
 import 'package:shake/shake.dart';
 
 const _titleAppBar = 'WalletWatch';
@@ -48,6 +46,12 @@ class Dashboard extends StatelessWidget {
                       'ATM Locator',
                       Icons.map,
                       onClick: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            duration: Duration(seconds: 2),
+                            content: Text('Loading map...')
+                          )
+                        );
                         _ShowSearch(context);
                       },
                     ),
@@ -112,20 +116,12 @@ class Dashboard extends StatelessWidget {
     }
 
     final location = await locatorService.getLocation();
-    final places = await placesService.getPlaces(location.latitude, location.longitude, BitmapDescriptor.defaultMarker,);
-
-    print(places.toList().toString());
-
-    ProxyProvider2<Position, BitmapDescriptor, Future<List<Place>>?>(
-      update: (context, position, icon, places){
-        return
-          (position != null) ?
-          placesService.getPlaces(position.latitude, position.longitude, icon)
-              : null;
-      },
+    final places = await placesService.getPlaces(
+      location.latitude,
+      location.longitude,
+      BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed)
     );
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('ATM Search')));
+
     Navigator.of(context).push(
       MaterialPageRoute(
         settings: RouteSettings(name: "/Search"),

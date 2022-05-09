@@ -4,9 +4,7 @@ import 'package:bytebank_persistence/services/marker_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 const _titleAppBar = 'ATM Locator';
 
@@ -18,218 +16,96 @@ class Search extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final currentPosition = Position(latitude: 40, longitude: 20, accuracy: 3, altitude: 2, heading: 1, speed: 3, speedAccuracy: 3, timestamp: DateTime.now(),);
 
-    final geoService = GeoLocatorService();
     final markerService = MarkerService();
-
     var markers = (places != null) ? markerService.getMarkers(places) : <Marker>[];
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(_titleAppBar),
-        ),
-        body:
-        Column(
-          children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height / 2,
-              width: MediaQuery.of(context).size.width,
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                    target: LatLng(location!.latitude,
-                        location!.longitude),
-                    zoom: 16.0),
-                zoomGesturesEnabled: true,
-                markers: Set<Marker>.of(markers),
-              ),
+      appBar: AppBar(
+        title: Text(_titleAppBar),
+      ),
+      body:
+      Column(
+        children: <Widget>[
+          Container(
+            height: MediaQuery.of(context).size.height / 2,
+            width: MediaQuery.of(context).size.width,
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(location!.latitude,
+                    location!.longitude),
+                zoom: 15.0),
+              zoomGesturesEnabled: true,
+              markers: Set<Marker>.of(markers),
+              myLocationEnabled: true,
             ),
-            SizedBox(height: 10.0),
-            Expanded(
-              child: (places.length > 0) ? ListView.builder(
-                  itemCount: places.length,
-                  itemBuilder: (context, index) {
-                    return FutureProvider(
-                      create: (context) =>
-                          geoService.getDistance(
-                              location!.latitude,
-                              location!.longitude,
-                              places[index]
-                                  .geometry
-                                  .location
-                                  .lat,
-                              places[index]
-                                  .geometry
-                                  .location
-                                  .lng),
-                      initialData: null,
-                      child: Card(
-                        child: ListTile(
-                          title: Text(places[index].name),
-                          subtitle: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(height: 3.0),
-                              (places[index].rating != null) ? Row(
-                                children: <Widget>[
-                                  RatingBarIndicator(
-                                    rating: places[index].rating,
-                                    itemBuilder: (context,
-                                        index) =>
-                                        Icon(
-                                            Icons.star,
-                                            color: Colors.amber
-                                        ),
-                                    itemCount: 5,
-                                    itemSize: 10.0,
-                                    direction:
-                                    Axis.horizontal,
-                                  )
-                                ],
-                              ) : Row(),
-                              SizedBox(height: 5.0),
-                              Consumer<double>(
-                                builder:
-                                    (context, meters, wiget) {
-                                  return (meters != null)
-                                      ? Text(
-                                      '${places[index].vicinity} \u00b7 ${(meters / 1609).round()} mi')
-                                      : Container();
-                                },
+          ),
+          SizedBox(height: 10.0),
+          Expanded(
+            child: (places.length > 0) ? ListView.builder(
+              itemCount: places.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: ListTile(
+                    title: Text(places[index].name),
+                    subtitle: Column(
+                      crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(height: 3.0),
+                        Row(
+                          children: <Widget>[
+                            (places[index].open == 1) ?
+                              Text(
+                                'Open',
+                                style: TextStyle(color: Colors.green),
                               )
-                            ],
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.directions),
-                            color: Theme.of(context).primaryColor,
-                            onPressed: () {
-                              _launchMapsUrl(
-                                  places[index].geometry.location.lat,
-                                  places[index].geometry.location.lng
-                              );
-                            },
-                          ),
+                            :
+                              Text(
+                                'Closed',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            Text(' \u00b7 ', style: TextStyle(fontWeight: FontWeight.bold)),
+                            FutureBuilder<double>(
+                              future: _getDistance(places[index].geometry.location.lat, places[index].geometry.location.lng),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  final double distance = snapshot.data as double;
+                                  final int roudDistance = distance.round();
+                                  return Text('$roudDistance meters');
+                                }
+                                return Text('');
+                              }
+                            ),
+                          ]
                         ),
-                      ),
-                    );
-                  }) : Center(child:Text('No ATM Found Nearby'),),
-                )
-              ],
-            )
-          //},
-
-        );
-      //);
-
-
-    /*
-    return FutureProvider(
-      create: (context) => placesProvider,
-      initialData: [],
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(_titleAppBar),
-        ),
-        body: (location != null)
-            ? Consumer<List<Place>>(
-          builder: (_, places, __) {
-            var markers = (places != null) ? markerService.getMarkers(places) : <Marker>[];
-              return (places != null) ? Column(
-                children: <Widget>[
-                  Container(
-                    height: MediaQuery.of(context).size.height / 3,
-                    width: MediaQuery.of(context).size.width,
-                    child: GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                          target: LatLng(location!.latitude,
-                              location!.longitude),
-                          zoom: 16.0),
-                      zoomGesturesEnabled: true,
-                      markers: Set<Marker>.of(markers),
+                        SizedBox(height: 5.0),
+                        (places[index].vicinity != null)
+                          ? Text(
+                          '${places[index].vicinity}'
+                          )
+                          : Container(),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.directions),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        _launchMapsUrl(
+                          places[index].geometry.location.lat,
+                          places[index].geometry.location.lng
+                        );
+                      },
                     ),
                   ),
-                  SizedBox(height: 10.0),
-                Expanded(
-                  child: (places.length > 0) ? ListView.builder(
-                    itemCount: places.length,
-                    itemBuilder: (context, index) {
-                      return FutureProvider(
-                        create: (context) =>
-                            geoService.getDistance(
-                                location!.latitude,
-                                location!.longitude,
-                                places[index]
-                                    .geometry
-                                    .location
-                                    .lat,
-                                places[index]
-                                    .geometry
-                                    .location
-                                    .lng),
-                        initialData: null,
-                        child: Card(
-                          child: ListTile(
-                            title: Text(places[index].name),
-                            subtitle: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(height: 3.0),
-                                (places[index].rating != null) ? Row(
-                                  children: <Widget>[
-                                    RatingBarIndicator(
-                                      rating: places[index].rating,
-                                      itemBuilder: (context,
-                                        index) =>
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.amber
-                                        ),
-                                        itemCount: 5,
-                                        itemSize: 10.0,
-                                        direction:
-                                        Axis.horizontal,
-                                      )
-                                    ],
-                                  ) : Row(),
-                                  SizedBox(height: 5.0),
-                                  Consumer<double>(
-                                    builder:
-                                      (context, meters, wiget) {
-                                        return (meters != null)
-                                          ? Text(
-                                          '${places[index].vicinity} \u00b7 ${(meters / 1609).round()} mi')
-                                          : Container();
-                                      },
-                                  )
-                                ],
-                              ),
-                              trailing: IconButton(
-                                icon: Icon(Icons.directions),
-                                color: Theme.of(context).primaryColor,
-                                onPressed: () {
-                                  _launchMapsUrl(
-                                    places[index].geometry.location.lat,
-                                    places[index].geometry.location.lng
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        );
-                      }) : Center(child:Text('No Parking Found Nearby'),),
-                )
-              ],
-            )
-                : Center(child: CircularProgressIndicator());
-          },
-        )
-            : Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
-    );*/
+                );
+              }
+            ) : Center(child:Text('No ATM Found Nearby')),
+          )
+        ],
+      )
+    );
   }
 
   void _launchMapsUrl(double lat, double lng) async {
@@ -239,5 +115,15 @@ class Search extends StatelessWidget {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  Future<double> _getDistance(double placeLatitude, double placeLongitude) async {
+    final geoService = GeoLocatorService();
+    late double distance = 0;
+    distance = await geoService.getDistance(
+      location!.latitude, location!.longitude,
+      placeLatitude, placeLongitude
+    );
+    return distance;
   }
 }
