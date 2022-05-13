@@ -77,7 +77,7 @@ class GraphicsPageState extends State<GraphicsPage> {
                   ));
                 }
               }
-              return CenteredMessage('No transactions found',
+              return CenteredMessage('No expenses found',
                   icon: Icons.warning);
           }
           return CenteredMessage('Unknown error');
